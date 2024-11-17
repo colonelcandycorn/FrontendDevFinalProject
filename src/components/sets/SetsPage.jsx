@@ -2,13 +2,15 @@ import { MainNavigation } from "../utils/MainNavigation.jsx";
 import { Col, Container, Row, Spinner, Form } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
+import { useQuery } from "@apollo/client";
+import { GET_SETS, GET_SETS_BY_CODE } from "../../assets/queries.jsx";
 
-export const SetsPage = ({ setInfo, loadingSets: isLoading, errorSets: error }) => {
+export const SetsPage = ({ setInfo, loadingSets: isLoading, errorSets: loadError }) => {
   const [selectedSet, setSelectedSet] = useState("");
   const [iconUri, setIconUri] = useState("");
   const navigate = useNavigate();
-  if (error) {
-    navigate("/error", { state: { errorMessages: error.message } });
+  if (loadError) {
+    navigate("/error", { state: { errorMessages: loadError.message } });
   }
 
   useEffect(() => {
@@ -29,6 +31,26 @@ export const SetsPage = ({ setInfo, loadingSets: isLoading, errorSets: error }) 
       setIconUri(selectedSetInfo.icon_svg_uri);
     }
   };
+
+  let totalSetPrice = 0;
+
+  const { loading, error, data } = useQuery(GET_SETS_BY_CODE(selectedSet), {
+    skip: !selectedSet,
+    onCompleted: (data) => {
+      // transform the data to a more usable format
+      const { sets } = data;
+
+      if (sets && sets.length > 0) {
+        const { cards } = sets[0];
+        const latestPrices = cards.map(function (card) {
+          return card.latestPrice;
+        });
+        console.log(latestPrices);
+      }
+    },
+  });
+
+  console.log(totalSetPrice);
 
   return (
     <>
