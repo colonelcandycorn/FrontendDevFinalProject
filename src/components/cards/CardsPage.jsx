@@ -2,18 +2,44 @@ import { MainNavigation } from "../utils/MainNavigation.jsx";
 import { Col, Container, Row, Spinner, Form } from "react-bootstrap";
 import { Navigate, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
+import { useQuery } from "@apollo/client";
+import { getCardsInSet } from "../utils/queries.js";
+import { CardPagination } from "./CardPagination.jsx";
 
-export const CardsPage = ({
-  setInfo,
-  loadingSets: isLoading,
-  errorSets: error,
-}) => {
+export const CardsPage = ({ setInfo, loadingSets: isLoading, errorSets }) => {
   const [selectedSet, setSelectedSet] = useState("");
+  const [apolloSetData, setApolloSetData] = useState([]);
   const [iconUri, setIconUri] = useState("");
   const navigate = useNavigate();
-  if (error) {
-    navigate("/error", { state: { errorMessages: error.message } });
+  if (errorSets) {
+    navigate("/error", { state: { errorMessages: errorSets.message } });
   }
+
+  const { loading, error, data } = useQuery(getCardsInSet(selectedSet), {
+    skip: !selectedSet,
+    onCompleted: (data) => {
+      // transform the data to a more usable format
+      const { sets } = data;
+      if (sets && sets.length > 0) {
+        const { cards } = sets[0];
+        const transformedData = cards
+          .map(({ name, identifiers: { scryfallId } }) => ({
+            name,
+            scryfallId,
+          }))
+          .reduce((collect, curr) => {
+            if (
+              !collect.some((element) => element.scryfallId === curr.scryfallId)
+            ) {
+              collect.push(curr);
+            }
+
+            return collect;
+          }, []);
+        setApolloSetData(transformedData);
+      }
+    },
+  });
 
   useEffect(() => {
     if (setInfo.length > 0) {
@@ -77,6 +103,16 @@ export const CardsPage = ({
               <p>Selected Set Code: {selectedSet}</p>
             </Col>
           </Row>
+        )}
+        {loading && (
+          <div className="d-flex justify-content-center align-items-center">
+            <Spinner animation="border" role="status">
+              <span className="visually-hidden">Loading Card Data...</span>
+            </Spinner>
+          </div>
+        )}
+        {!loading && apolloSetData.length > 0 && (
+          <CardPagination cardArray={apolloSetData} />
         )}
       </Container>
     </>
