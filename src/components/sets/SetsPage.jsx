@@ -1,4 +1,4 @@
-import { MainNavigation } from "./MainNavigation.jsx";
+import { MainNavigation } from "../utils/MainNavigation.jsx";
 import { Col, Container, Row } from "react-bootstrap";
 
 export const SetsPage = () => {

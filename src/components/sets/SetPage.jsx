@@ -1,6 +1,6 @@
 import { Breadcrumb, Col, Container, Row } from "react-bootstrap";
 import { Link, useParams } from "react-router-dom";
-import { MainNavigation } from "./MainNavigation.jsx";
+import { MainNavigation } from "../utils/MainNavigation.jsx";
 
 export const SetPage = () => {
   const { setName } = useParams();

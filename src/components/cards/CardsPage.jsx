@@ -1,4 +1,4 @@
-import { MainNavigation } from "./MainNavigation.jsx";
+import { MainNavigation } from "../utils/MainNavigation.jsx";
 import { Col, Container, Row, Spinner, Form } from "react-bootstrap";
 import { Navigate, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";

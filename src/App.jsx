@@ -1,11 +1,11 @@
 import { Navigate, Route, Routes } from "react-router-dom";
-import { CardsPage } from "./components/CardsPage.jsx";
-import { SetsPage } from "./components/SetsPage.jsx";
-import { NoMatch } from "./components/NoMatch.jsx";
-import { CardPage } from "./components/CardPage.jsx";
-import { SetPage } from "./components/SetPage.jsx";
+import { CardsPage } from "./components/cards/CardsPage.jsx";
+import { SetsPage } from "./components/sets/SetsPage.jsx";
+import { NoMatch } from "./components/utils/NoMatch.jsx";
+import { CardPage } from "./components/cards/CardPage.jsx";
+import { SetPage } from "./components/sets/SetPage.jsx";
 import { useEffect, useState } from "react";
-import { ErrorPage } from "./components/ErrorPage.jsx";
+import { ErrorPage } from "./components/utils/ErrorPage.jsx";
 // code, set_type, name, released_at, card_count
 export const App = () => {
   const [setNames, setSetNames] = useState([]);

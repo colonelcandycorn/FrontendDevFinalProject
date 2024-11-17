@@ -9,14 +9,16 @@ export const MainNavigation = () => {
           MTG Info
         </Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
-        <Nav className={"me-auto fs-4"}>
-          <Nav.Link as={Link} to="/cards">
-            Cards
-          </Nav.Link>
-          <Nav.Link as={Link} to="/sets">
-            Sets
-          </Nav.Link>
-        </Nav>
+        <Navbar.Collapse id="basic-navbar-nav">
+          <Nav className={"me-auto fs-4"}>
+            <Nav.Link as={Link} to="/cards">
+              Cards
+            </Nav.Link>
+            <Nav.Link as={Link} to="/sets">
+              Sets
+            </Nav.Link>
+          </Nav>
+        </Navbar.Collapse>
       </Container>
     </Navbar>
   );
