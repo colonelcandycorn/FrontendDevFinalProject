@@ -1,13 +1,9 @@
 import { MainNavigation } from "../utils/MainNavigation.jsx";
 import { Col, Container, Row, Spinner, Form } from "react-bootstrap";
-import { Navigate, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 
-export const CardsPage = ({
-  setInfo,
-  loadingSets: isLoading,
-  errorSets: error,
-}) => {
+export const CardsPage = ({ setInfo, loadingSets: isLoading, errorSets: error }) => {
   const [selectedSet, setSelectedSet] = useState("");
   const [iconUri, setIconUri] = useState("");
   const navigate = useNavigate();
