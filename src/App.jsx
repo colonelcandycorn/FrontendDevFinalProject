@@ -60,7 +60,16 @@ export const App = () => {
           }
         />
         <Route path={"cards/:cardName"} element={<CardPage />} />
-        <Route path={"sets"} element={<SetsPage />} />
+        <Route
+          path={"sets"}
+          element={
+            <SetsPage
+              setInfo={setNames}
+              loadingSets={loadingSets}
+              errorSets={errorSets}
+            />
+          }
+        />
         <Route path={"sets/:setName"} element={<SetPage />} />
         <Route path={"error"} element={<ErrorPage />} />
         <Route path={"*"} element={<NoMatch />} />
