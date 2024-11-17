@@ -14,7 +14,7 @@ import "../src/assets/css/main.css";
 const token = import.meta.env.VITE_MTG_JSON_TOKEN;
 
 const httpLink = createHttpLink({
-  uri: "https://mtgjson.com/graphql",
+  uri: "https://graphql.mtgjson.com/",
 });
 
 const authLink = setContext((_, { headers }) => {
