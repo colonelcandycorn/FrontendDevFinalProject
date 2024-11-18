@@ -23,8 +23,9 @@ export const CardsPage = ({ setInfo, loadingSets: isLoading, errorSets }) => {
       if (sets && sets.length > 0) {
         const { cards } = sets[0];
         const transformedData = cards
-          .map(({ name, identifiers: { scryfallId } }) => ({
+          .map(({ name, setCode, identifiers: { scryfallId } }) => ({
             name,
+            setCode,
             scryfallId,
           }))
           .reduce((collect, curr) => {

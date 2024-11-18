@@ -11,6 +11,7 @@ export const getCardsInSet = (setCode) => {
               name
               cards {
                   name
+                  setCode
                   identifiers {
                       scryfallId
                   }
