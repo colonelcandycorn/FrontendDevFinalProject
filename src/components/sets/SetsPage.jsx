@@ -3,7 +3,7 @@ import { Col, Container, Row, Spinner, Form } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useQuery } from "@apollo/client";
-import { GET_SETS, GET_SETS_BY_CODE } from "../../assets/queries.jsx";
+import { GET_SETS_BY_CODE } from "../../assets/queries.jsx";
 
 export const SetsPage = ({ setInfo, loadingSets: isLoading, errorSets: loadError }) => {
   const [selectedSet, setSelectedSet] = useState("");
@@ -43,7 +43,7 @@ export const SetsPage = ({ setInfo, loadingSets: isLoading, errorSets: loadError
       if (sets && sets.length > 0) {
         const { cards } = sets[0];
         const latestPrices = cards.map(function (card) {
-          return card.latestPrice;
+          return card.price;
         });
         console.log(latestPrices);
       }
