@@ -15,10 +15,18 @@ export const getCardsInSet = (setCode) => {
                   identifiers {
                       scryfallId
                   }
-                  latestPrice (
+                  normalPrice: latestPrice (
                       listType: RETAIL,
                       provider: "tcgplayer",
                       cardType: "normal"
+
+                  ) {
+                      price
+                  }
+                  foilPrice: latestPrice (
+                      listType: RETAIL,
+                      provider: "tcgplayer",
+                      cardType: "foil"
 
                   ) {
                       price

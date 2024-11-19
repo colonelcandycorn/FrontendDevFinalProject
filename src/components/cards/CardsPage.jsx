@@ -31,13 +31,21 @@ export const CardsPage = ({ setInfo, loadingSets: isLoading, errorSets }) => {
         const { cards } = sets[0];
         const transformedData = cards
           .map(
-            ({ name, setCode, identifiers: { scryfallId }, latestPrice }) => {
-              const price = latestPrice?.price ?? 0; // Safe navigation and nullish coalescing
+            ({
+              name,
+              setCode,
+              identifiers: { scryfallId },
+              normalPrice,
+              foilPrice,
+            }) => {
+              const price = normalPrice?.price ?? 0; // Safe navigation and nullish coalescing
+              foilPrice = foilPrice?.price ?? 0;
               return {
                 name,
                 setCode,
                 scryfallId,
                 price,
+                foilPrice,
               };
             },
           )
