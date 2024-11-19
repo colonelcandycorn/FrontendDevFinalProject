@@ -12,22 +12,36 @@ export const CardsPage = ({ setInfo, loadingSets: isLoading, errorSets }) => {
   const [iconUri, setIconUri] = useState("");
   const navigate = useNavigate();
   if (errorSets) {
-    navigate("/error", { state: { errorMessages: errorSets.message } });
+    navigate("/error", {
+      state: { errorMessages: "from errorSets" + errorSets.message },
+    });
   }
 
   const { loading, error, data } = useQuery(getCardsInSet(selectedSet), {
     skip: !selectedSet,
+    OnError: () => {
+      navigate("/error", {
+        state: { errorMessages: "from useQuery" + error.message },
+      });
+    },
     onCompleted: (data) => {
       // transform the data to a more usable format
       const { sets } = data;
       if (sets && sets.length > 0) {
         const { cards } = sets[0];
         const transformedData = cards
-          .map(({ name, setCode, identifiers: { scryfallId } }) => ({
-            name,
-            setCode,
-            scryfallId,
-          }))
+          .map(
+            ({ name, setCode, identifiers: { scryfallId }, latestPrice }) => {
+              const price = latestPrice?.price ?? 0; // Safe navigation and nullish coalescing
+              return {
+                name,
+                setCode,
+                scryfallId,
+                price,
+              };
+            },
+          )
+          .sort((a, b) => b.price - a.price)
           .reduce((collect, curr) => {
             if (
               !collect.some((element) => element.scryfallId === curr.scryfallId)
@@ -79,7 +93,7 @@ export const CardsPage = ({ setInfo, loadingSets: isLoading, errorSets }) => {
           </div>
         )}
         {!isLoading && (
-          <Row>
+          <Row className={"mb-2"}>
             <Col md={2}>
               <Form.Select value={selectedSet} onChange={handleSelectChange}>
                 {setInfo.map(({ code, name }) => (
@@ -89,20 +103,17 @@ export const CardsPage = ({ setInfo, loadingSets: isLoading, errorSets }) => {
                 ))}
               </Form.Select>
             </Col>
-          </Row>
-        )}
-        {selectedSet && (
-          <Row>
-            <Col>
-              {iconUri && (
-                <img
-                  src={iconUri}
-                  alt="Selected Set Icon"
-                  style={{ width: "100px", height: "100px" }}
-                />
-              )}
-              <p>Selected Set Code: {selectedSet}</p>
-            </Col>
+            {selectedSet && (
+              <Col>
+                {iconUri && (
+                  <img
+                    src={iconUri}
+                    alt="Selected Set Icon"
+                    style={{ width: "36px", height: "36px" }}
+                  />
+                )}
+              </Col>
+            )}
           </Row>
         )}
         {loading && (

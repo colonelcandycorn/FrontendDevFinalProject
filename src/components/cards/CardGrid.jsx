@@ -1,6 +1,7 @@
 import { Col, Container, Row, Spinner } from "react-bootstrap";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { CardCard } from "./CardCard.jsx";
 
 export const CardGrid = ({ currentCards }) => {
   const [error, setError] = useState(null);
@@ -15,9 +16,14 @@ export const CardGrid = ({ currentCards }) => {
           `https://api.scryfall.com/cards/${cardId}`,
         );
         const cardData = await response.json();
-        const {
-          image_uris: { normal: uri },
-        } = cardData;
+        const { image_uris } = await cardData;
+        const uri =
+          (await image_uris?.normal) ??
+          image_uris?.large ??
+          image_uris?.small ??
+          image_uris?.border_crop ??
+          image_uris?.art_crop ??
+          "https://placehold.co/326x453";
         return uri;
       } catch (e) {
         setError(e);
@@ -26,24 +32,28 @@ export const CardGrid = ({ currentCards }) => {
       }
     };
 
-    const cardURIs = currentCards.map(async ({ name, setCode, scryfallId }) => {
-      const uri = await requestImages(scryfallId);
-      return { name, setCode, scryfallId, uri };
-    });
+    const cardURIs = currentCards.map(
+      async ({ name, setCode, scryfallId, price }) => {
+        const uri = await requestImages(scryfallId);
+        return { name, setCode, scryfallId, price, uri };
+      },
+    );
 
     Promise.all(cardURIs).then(setCardWithURIs).catch(setError);
   }, [currentCards]);
 
   if (error) {
-    navigate("/error", { state: { errorMessages: error.message } });
+    navigate("/error", {
+      state: { errorMessages: "from card grid " + error.message },
+    });
   }
 
   const cardChunks = [];
 
   // Create chunks of cards, 3 cards per row
   if (!loading) {
-    for (let i = 0; i < cardWithURIs.length; i += 4) {
-      cardChunks.push(cardWithURIs.slice(i, i + 4));
+    for (let i = 0; i < cardWithURIs.length; i += 12) {
+      cardChunks.push(cardWithURIs.slice(i, i + 12));
     }
   }
 
@@ -60,25 +70,27 @@ export const CardGrid = ({ currentCards }) => {
       )}
       {!loading && (
         <Row key={rowIndex}>
-          {cardRow.map(({ name, setCode, scryfallId, uri }) => (
-            <Col key={scryfallId} md={3} sm={4} xs={12}>
-              <a href={`/cards/${scryfallId}`}>
-                <img
-                  src={uri}
-                  alt={name}
-                  className={"img-fluid"}
-                  style={{ marginBottom: "1rem" }}
-                />
-                <p>{name}</p>
-                <p>{setCode}</p>
-              </a>
-            </Col>
-          ))}
+          {cardRow.map(
+            ({ name, setCode, scryfallId, price, uri }, colIndex) => (
+              <CardCard
+                key={colIndex}
+                price={price}
+                name={name}
+                setCode={setCode}
+                scryfallId={scryfallId}
+                uri={uri}
+              />
+            ),
+          )}
         </Row>
       )}
     </>
   ));
 
   // Render the grid inside a Bootstrap container
-  return <Container>{cardRows}</Container>;
+  return (
+    <Container fluid className={"m-0"}>
+      {cardRows}
+    </Container>
+  );
 };

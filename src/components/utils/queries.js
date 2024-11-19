@@ -15,6 +15,14 @@ export const getCardsInSet = (setCode) => {
                   identifiers {
                       scryfallId
                   }
+                  latestPrice (
+                      listType: RETAIL,
+                      provider: "tcgplayer",
+                      cardType: "normal"
+
+                  ) {
+                      price
+                  }
               }
           }
       }

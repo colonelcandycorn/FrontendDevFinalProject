@@ -4,7 +4,7 @@ import { PageNavigation } from "./PageNavigation.jsx";
 import { CardGrid } from "./CardGrid.jsx";
 
 export const CardPagination = ({ cardArray }) => {
-  const cardsPerPage = 20;
+  const cardsPerPage = 24;
   const numberOfPages = Math.ceil(cardArray.length / cardsPerPage);
   const [currentPage, setCurrentPage] = useState(1);
   const indexOfLastCard = currentPage * cardsPerPage;
