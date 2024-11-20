@@ -33,9 +33,9 @@ export const CardGrid = ({ currentCards }) => {
     };
 
     const cardURIs = currentCards.map(
-      async ({ name, setCode, scryfallId, price }) => {
+      async ({ name, setCode, scryfallId, price, foilPrice }) => {
         const uri = await requestImages(scryfallId);
-        return { name, setCode, scryfallId, price, uri };
+        return { name, setCode, scryfallId, price, foilPrice, uri };
       },
     );
 
@@ -71,12 +71,16 @@ export const CardGrid = ({ currentCards }) => {
       {!loading && (
         <Row key={rowIndex}>
           {cardRow.map(
-            ({ name, setCode, scryfallId, price, uri }, colIndex) => (
+            (
+              { name, setCode, scryfallId, price, foilPrice, uri },
+              colIndex,
+            ) => (
               <CardCard
                 key={colIndex}
                 price={price}
                 name={name}
                 setCode={setCode}
+                foilPrice={foilPrice}
                 scryfallId={scryfallId}
                 uri={uri}
               />

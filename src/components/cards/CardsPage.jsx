@@ -5,11 +5,15 @@ import { useEffect, useState } from "react";
 import { useQuery } from "@apollo/client";
 import { getCardsInSet } from "../utils/queries.js";
 import { CardPagination } from "./CardPagination.jsx";
+import { SortDropdown } from "./SortDropdown.jsx";
 
 export const CardsPage = ({ setInfo, loadingSets: isLoading, errorSets }) => {
   const [selectedSet, setSelectedSet] = useState("");
   const [apolloSetData, setApolloSetData] = useState([]);
   const [iconUri, setIconUri] = useState("");
+  const [sortFunction, setSortFunction] = useState(
+    () => (a, b) => b.price - a.price,
+  );
   const navigate = useNavigate();
   if (errorSets) {
     navigate("/error", {
@@ -49,7 +53,6 @@ export const CardsPage = ({ setInfo, loadingSets: isLoading, errorSets }) => {
               };
             },
           )
-          .sort((a, b) => b.price - a.price)
           .reduce((collect, curr) => {
             if (
               !collect.some((element) => element.scryfallId === curr.scryfallId)
@@ -58,11 +61,18 @@ export const CardsPage = ({ setInfo, loadingSets: isLoading, errorSets }) => {
             }
 
             return collect;
-          }, []);
+          }, [])
+          .sort(sortFunction);
         setApolloSetData(transformedData);
       }
     },
   });
+
+  useEffect(() => {
+    const newApolloSetData = [...apolloSetData];
+    newApolloSetData.sort(sortFunction);
+    setApolloSetData(newApolloSetData);
+  }, [sortFunction]);
 
   useEffect(() => {
     if (setInfo.length > 0) {
@@ -101,7 +111,7 @@ export const CardsPage = ({ setInfo, loadingSets: isLoading, errorSets }) => {
           </div>
         )}
         {!isLoading && (
-          <Row className={"mb-2"}>
+          <Row className={"mb-2 justify-content-between"}>
             <Col md={2}>
               <Form.Select value={selectedSet} onChange={handleSelectChange}>
                 {setInfo.map(({ code, name }) => (
@@ -122,6 +132,7 @@ export const CardsPage = ({ setInfo, loadingSets: isLoading, errorSets }) => {
                 )}
               </Col>
             )}
+            <SortDropdown setSortOrder={setSortFunction} />
           </Row>
         )}
         {loading && (
