@@ -1,5 +1,5 @@
 import { Col, Row } from "react-bootstrap";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { PageNavigation } from "./PageNavigation.jsx";
 import { CardGrid } from "./CardGrid.jsx";
 
@@ -9,7 +9,11 @@ export const CardPagination = ({ cardArray }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const indexOfLastCard = currentPage * cardsPerPage;
   const indexOfFirstCard = indexOfLastCard - cardsPerPage;
-  const currentCards = cardArray.slice(indexOfFirstCard, indexOfLastCard);
+  const [currentCards, setCurrentCards] = useState([]);
+
+  useEffect(() => {
+    setCurrentCards(cardArray.slice(indexOfFirstCard, indexOfLastCard));
+  }, [cardArray, indexOfFirstCard, indexOfLastCard]);
 
   const handlePageClick = (pageNumber) => {
     setCurrentPage(pageNumber);
@@ -17,7 +21,7 @@ export const CardPagination = ({ cardArray }) => {
 
   return (
     <>
-      <CardGrid currentCards={currentCards} />
+      <CardGrid currentCards={[...currentCards]} />
       <PageNavigation
         currentPage={currentPage}
         numberOfPages={numberOfPages}

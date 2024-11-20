@@ -2,6 +2,7 @@ import { Col, Container, Row, Spinner } from "react-bootstrap";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { CardCard } from "./CardCard.jsx";
+import { RateLimiter } from "limiter";
 
 export const CardGrid = ({ currentCards }) => {
   const [error, setError] = useState(null);
@@ -31,9 +32,11 @@ export const CardGrid = ({ currentCards }) => {
         setLoading(false);
       }
     };
+    const limiter = new RateLimiter({ tokensPerInterval: 1, interval: 50 });
 
     const cardURIs = currentCards.map(
       async ({ name, setCode, scryfallId, price, foilPrice }) => {
+        const remainingMessages = await limiter.removeTokens(1);
         const uri = await requestImages(scryfallId);
         return { name, setCode, scryfallId, price, foilPrice, uri };
       },
