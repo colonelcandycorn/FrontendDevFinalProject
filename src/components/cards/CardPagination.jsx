@@ -1,4 +1,3 @@
-import { Col, Row } from "react-bootstrap";
 import { useEffect, useState } from "react";
 import { PageNavigation } from "./PageNavigation.jsx";
 import { CardGrid } from "./CardGrid.jsx";
@@ -7,17 +6,25 @@ export const CardPagination = ({ cardArray }) => {
   const cardsPerPage = 24;
   const numberOfPages = Math.ceil(cardArray.length / cardsPerPage);
   const [currentPage, setCurrentPage] = useState(1);
-  const indexOfLastCard = currentPage * cardsPerPage;
-  const indexOfFirstCard = indexOfLastCard - cardsPerPage;
   const [currentCards, setCurrentCards] = useState([]);
 
   useEffect(() => {
+    const indexOfLastCard = cardsPerPage;
+    const indexOfFirstCard = 0;
     setCurrentCards(cardArray.slice(indexOfFirstCard, indexOfLastCard));
-  }, [cardArray, indexOfFirstCard, indexOfLastCard]);
+  }, [cardArray]);
 
   const handlePageClick = (pageNumber) => {
     setCurrentPage(pageNumber);
+    const indexOfLastCard = pageNumber * cardsPerPage;
+    const indexOfFirstCard = indexOfLastCard - cardsPerPage;
+    setCurrentCards(cardArray.slice(indexOfFirstCard, indexOfLastCard));
   };
+
+  useEffect(() => {
+    console.log("Current Page:", currentPage);
+    console.log("Current Cards:", currentCards);
+  }, [currentPage, currentCards]);
 
   return (
     <>

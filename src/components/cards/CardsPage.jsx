@@ -61,9 +61,9 @@ export const CardsPage = ({ setInfo, loadingSets: isLoading, errorSets }) => {
             }
 
             return collect;
-          }, [])
-          .sort(sortFunction);
-        setApolloSetData(transformedData);
+          }, []);
+        transformedData.sort(sortFunction);
+        setApolloSetData([...transformedData]);
       }
     },
   });

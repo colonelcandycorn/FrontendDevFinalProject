@@ -11,6 +11,7 @@ export const CardGrid = ({ currentCards }) => {
   const navigate = useNavigate();
 
   useEffect(() => {
+    setLoading(true);
     const requestImages = async (cardId) => {
       try {
         const response = await fetch(
@@ -28,8 +29,6 @@ export const CardGrid = ({ currentCards }) => {
         return uri;
       } catch (e) {
         setError(e);
-      } finally {
-        setLoading(false);
       }
     };
     const limiter = new RateLimiter({ tokensPerInterval: 1, interval: 50 });
@@ -42,7 +41,11 @@ export const CardGrid = ({ currentCards }) => {
       },
     );
 
-    Promise.all(cardURIs).then(setCardWithURIs).catch(setError);
+    Promise.all(cardURIs)
+      .then(chunkCards)
+      .then(setCardWithURIs)
+      .finally(() => setLoading(false))
+      .catch(setError);
     // delay 50 * number of cards to show loading spinner
   }, [currentCards]);
 
@@ -52,14 +55,13 @@ export const CardGrid = ({ currentCards }) => {
     });
   }
 
-  const cardChunks = [];
-
-  // Create chunks of cards, 3 cards per row
-  if (!loading) {
-    for (let i = 0; i < cardWithURIs.length; i += 12) {
-      cardChunks.push(cardWithURIs.slice(i, i + 12));
+  const chunkCards = (cards, chunkSize = 12) => {
+    const chunkedArray = [];
+    for (let i = 0; i < cards.length; i += chunkSize) {
+      chunkedArray.push(cards.slice(i, i + chunkSize));
     }
-  }
+    return chunkedArray;
+  };
 
   // Map chunks to rows
 
@@ -67,7 +69,7 @@ export const CardGrid = ({ currentCards }) => {
   return (
     <Container fluid className={"m-0"}>
       {!loading &&
-        cardChunks.map((cardRow, rowIndex) => (
+        cardWithURIs.map((cardRow, rowIndex) => (
           <Row key={rowIndex}>
             {cardRow.map(
               (
