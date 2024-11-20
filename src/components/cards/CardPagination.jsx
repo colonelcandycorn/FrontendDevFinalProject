@@ -1,5 +1,5 @@
 import { Col, Row } from "react-bootstrap";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { PageNavigation } from "./PageNavigation.jsx";
 import { CardGrid } from "./CardGrid.jsx";
 
@@ -14,6 +14,10 @@ export const CardPagination = ({ cardArray }) => {
   const handlePageClick = (pageNumber) => {
     setCurrentPage(pageNumber);
   };
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [cardArray]);
 
   return (
     <>
