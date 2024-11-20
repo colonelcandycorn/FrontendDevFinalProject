@@ -59,23 +59,6 @@ export const CardGrid = ({ currentCards }) => {
   }
 
   // Map chunks to rows
-  const cardRows = cardChunks.map((cardRow, rowIndex) => (
-    <Row key={rowIndex}>
-      {cardRow.map(
-        ({ name, setCode, scryfallId, price, foilPrice, uri }, colIndex) => (
-          <CardCard
-            key={`${scryfallId}-${setCode}-${colIndex}`}
-            price={price}
-            name={name}
-            setCode={setCode}
-            foilPrice={foilPrice}
-            scryfallId={scryfallId}
-            uri={uri}
-          />
-        ),
-      )}
-    </Row>
-  ));
 
   // Render the grid inside a Bootstrap container
   return (
