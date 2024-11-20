@@ -21,7 +21,7 @@ export const PageNavigation = ({
         {currentPage < 5 &&
           Array.from({ length: 4 }).map((_, i) => (
             <Pagination.Item
-              key={i}
+              key={i + 2}
               onClick={() => handlePageClick(i + 2)}
               active={currentPage === i + 2}
             >
@@ -32,7 +32,7 @@ export const PageNavigation = ({
         {currentPage >= 5 &&
           Array.from({ length: 3 }).map((_, i) => (
             <Pagination.Item
-              key={i}
+              key={currentPage - 1 + i}
               onClick={() => handlePageClick(currentPage - 1 + i)}
               active={currentPage === currentPage - 1 + i}
             >
