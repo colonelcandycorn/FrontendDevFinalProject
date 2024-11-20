@@ -32,14 +32,26 @@ export const CardGrid = ({ currentCards }) => {
       }
     };
 
-    const cardURIs = currentCards.map(
-      async ({ name, setCode, scryfallId, price, foilPrice }) => {
-        const uri = await requestImages(scryfallId);
-        return { name, setCode, scryfallId, price, foilPrice, uri };
-      },
-    );
+    const fetchCardURIsWithDelay = async () => {
+      const uris = [];
+      for (const card of currentCards) {
+        try {
+          const uri = await requestImages(card.scryfallId);
+          uris.push({
+            ...card,
+            uri,
+          });
+        } catch (e) {
+          setError(e);
+        }
+        // Introduce a 50ms delay between requests
+        await new Promise((resolve) => setTimeout(resolve, 50));
+      }
+      setCardWithURIs(uris);
+      setLoading(false);
+    };
 
-    Promise.all(cardURIs).then(setCardWithURIs).catch(setError);
+    fetchCardURIsWithDelay().catch((e) => setError(e));
   }, [currentCards]);
 
   if (error) {
