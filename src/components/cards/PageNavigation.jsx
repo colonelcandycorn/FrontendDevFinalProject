@@ -19,7 +19,7 @@ export const PageNavigation = ({
           {1}
         </Pagination.Item>
         {currentPage < 5 &&
-          Array.from({ length: 4 }).map((_, i) => (
+          Array.from({ length: Math.min(4, numberOfPages - 1) }).map((_, i) => (
             <Pagination.Item
               key={i + 2}
               onClick={() => handlePageClick(i + 2)}
@@ -41,13 +41,17 @@ export const PageNavigation = ({
               {currentPage - 1 + i}
             </Pagination.Item>
           ))}
-        {currentPage <= numberOfPages - 3 && <Pagination.Ellipsis disabled />}
-        <Pagination.Item
-          active={currentPage === numberOfPages}
-          onClick={() => handlePageClick(numberOfPages)}
-        >
-          {numberOfPages}
-        </Pagination.Item>
+        {currentPage <= numberOfPages - 3 && numberOfPages > 5 && (
+          <Pagination.Ellipsis disabled />
+        )}
+        {numberOfPages > 5 && (
+          <Pagination.Item
+            active={currentPage === numberOfPages}
+            onClick={() => handlePageClick(numberOfPages)}
+          >
+            {numberOfPages}
+          </Pagination.Item>
+        )}
         <Pagination.Next
           className={currentPage === numberOfPages ? "disabled" : ""}
           onClick={() => handlePageClick(currentPage + 1)}
