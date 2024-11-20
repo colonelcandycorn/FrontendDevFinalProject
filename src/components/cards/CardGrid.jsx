@@ -32,26 +32,15 @@ export const CardGrid = ({ currentCards }) => {
       }
     };
 
-    const fetchCardURIsWithDelay = async () => {
-      const uris = [];
-      for (const card of currentCards) {
-        try {
-          const uri = await requestImages(card.scryfallId);
-          uris.push({
-            ...card,
-            uri,
-          });
-        } catch (e) {
-          setError(e);
-        }
-        // Introduce a 50ms delay between requests
-        await new Promise((resolve) => setTimeout(resolve, 50));
-      }
-      setCardWithURIs(uris);
-      setLoading(false);
-    };
+    const cardURIs = currentCards.map(
+      async ({ name, setCode, scryfallId, price, foilPrice }) => {
+        const uri = await requestImages(scryfallId);
+        return { name, setCode, scryfallId, price, foilPrice, uri };
+      },
+    );
 
-    fetchCardURIsWithDelay().catch((e) => setError(e));
+    Promise.all(cardURIs).then(setCardWithURIs).catch(setError);
+    // delay 50 * number of cards to show loading spinner
   }, [currentCards]);
 
   if (error) {
@@ -71,42 +60,47 @@ export const CardGrid = ({ currentCards }) => {
 
   // Map chunks to rows
   const cardRows = cardChunks.map((cardRow, rowIndex) => (
-    <>
-      {/* Show loading spinner while fetching images */}
-      {loading && (
-        <div className="d-flex justify-content-center align-items-center">
-          <Spinner animation="border" role="status">
-            <span className="visually-hidden">Loading Country Data...</span>
-          </Spinner>
-        </div>
+    <Row key={rowIndex}>
+      {cardRow.map(
+        ({ name, setCode, scryfallId, price, foilPrice, uri }, colIndex) => (
+          <CardCard
+            key={`${scryfallId}-${setCode}-${colIndex}`}
+            price={price}
+            name={name}
+            setCode={setCode}
+            foilPrice={foilPrice}
+            scryfallId={scryfallId}
+            uri={uri}
+          />
+        ),
       )}
-      {!loading && (
-        <Row key={rowIndex}>
-          {cardRow.map(
-            (
-              { name, setCode, scryfallId, price, foilPrice, uri },
-              colIndex,
-            ) => (
-              <CardCard
-                key={colIndex}
-                price={price}
-                name={name}
-                setCode={setCode}
-                foilPrice={foilPrice}
-                scryfallId={scryfallId}
-                uri={uri}
-              />
-            ),
-          )}
-        </Row>
-      )}
-    </>
+    </Row>
   ));
 
   // Render the grid inside a Bootstrap container
   return (
     <Container fluid className={"m-0"}>
-      {cardRows}
+      {!loading &&
+        cardChunks.map((cardRow, rowIndex) => (
+          <Row key={rowIndex}>
+            {cardRow.map(
+              (
+                { name, setCode, scryfallId, price, foilPrice, uri },
+                colIndex,
+              ) => (
+                <CardCard
+                  key={`${scryfallId}-${setCode}-${colIndex}`}
+                  price={price}
+                  name={name}
+                  setCode={setCode}
+                  foilPrice={foilPrice}
+                  scryfallId={scryfallId}
+                  uri={uri}
+                />
+              ),
+            )}
+          </Row>
+        ))}
     </Container>
   );
 };
