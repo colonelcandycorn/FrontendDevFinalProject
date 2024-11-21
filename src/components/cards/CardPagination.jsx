@@ -11,6 +11,7 @@ export const CardPagination = ({ cardArray }) => {
   useEffect(() => {
     const indexOfLastCard = cardsPerPage;
     const indexOfFirstCard = 0;
+    setCurrentPage(1);
     setCurrentCards(cardArray.slice(indexOfFirstCard, indexOfLastCard));
   }, [cardArray]);
 
