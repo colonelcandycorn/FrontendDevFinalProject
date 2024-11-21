@@ -33,37 +33,35 @@ export const SetsPage = ({ setInfo, loadingSets: isLoading, errorSets: loadError
     }
   };
 
-  // const { loading, error, data } = useQuery(GET_SETS_BY_CODE(selectedSet), {
-  //   skip: !selectedSet,
-  //   onCompleted: (data) => {
-  //     if (loading) return "Loading...";
-  //     if (error) return `Error! ${error.message}`;
-  //     // transform the data to a more usable format
-  //     const { sets } = data;
-  //     if (sets && sets.length > 0) {
-  //       const { cards } = sets[0];
-  //       const latestPrices = cards.map(function (card) {
-  //         return card.latestPrice?.price ?? 0;
-  //       });
-  //     }
-  //   },
-  // });
+  const { loading, data } = useQuery(GET_SETS);
+  if (loading) {
+    return "Loading...";
+  }
+  const { sets } = data;
+  let { cards } = {};
+  let latestPrices = {};
+  if (sets && sets.length > 0) {
+    cards = sets[0].cards || {};
 
-  const { loading, error, data } = useQuery(GET_SETS);
+    latestPrices = cards.map(function (card) {
+      return card.latestPrice?.price ?? 0;
+    });
+  }
+
   // let totalSetPrice = latestPrices.reduce((accumulator, current) => accumulator + current, 0);
 
-  console.log(data);
+  console.log(latestPrices);
 
-  const data1 = [
-    {
-      id: "series1",
-      data: [
-        { x: "A", y: 10 },
-        { x: "B", y: 20 },
-        { x: "C", y: 15 },
-      ],
-    },
-  ];
+  // const data1 = [
+  //   {
+  //     id: "series1",
+  //     data: [
+  //       { x: "A", y: 10 },
+  //       { x: "B", y: 20 },
+  //       { x: "C", y: 15 },
+  //     ],
+  //   },
+  // ];
 
   return (
     <>
@@ -114,9 +112,7 @@ export const SetsPage = ({ setInfo, loadingSets: isLoading, errorSets: loadError
             <div>
               <h2> Some Test Text </h2>
               <div style={{ display: "grid" }}>
-                <div style={{ height: 400 }}>
-                  <ResponsiveLine data={data1} />
-                </div>
+                <div style={{ height: 400 }}>{/* <ResponsiveLine data={data1} /> */}</div>
               </div>
             </div>
           </Row>
