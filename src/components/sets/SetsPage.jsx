@@ -43,9 +43,9 @@ export const SetsPage = ({ setInfo, loadingSets: isLoading, errorSets: loadError
       if (sets && sets.length > 0) {
         const { cards } = sets[0];
         const latestPrices = cards.map(function (card) {
-          return card.price;
+          return card.latestPrice;
         });
-        console.log(latestPrices);
+        console.log(latestPrices[0].price);
       }
     },
   });
