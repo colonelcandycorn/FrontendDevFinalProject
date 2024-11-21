@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useQuery } from "@apollo/client";
 import { GET_SETS_BY_CODE } from "../../assets/queries.jsx";
+import { Line } from "@nivo/line";
 
 export const SetsPage = ({ setInfo, loadingSets: isLoading, errorSets: loadError }) => {
   const [selectedSet, setSelectedSet] = useState("");
@@ -43,14 +44,14 @@ export const SetsPage = ({ setInfo, loadingSets: isLoading, errorSets: loadError
       if (sets && sets.length > 0) {
         const { cards } = sets[0];
         const latestPrices = cards.map(function (card) {
-          return card.latestPrice;
+          return card.latestPrice?.price ?? 0;
         });
-        console.log(latestPrices[0].price);
+        console.log(latestPrices);
       }
     },
   });
 
-  console.log(totalSetPrice);
+  console.log(data);
 
   return (
     <>
