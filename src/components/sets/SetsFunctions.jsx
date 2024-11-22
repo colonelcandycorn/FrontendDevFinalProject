@@ -2,13 +2,8 @@ export const getColorData = (data) => {
   //Refine data for later use
   const { sets } = data || null;
   let { cards } = {};
-  //   let latestPrices = {};
   if (sets && sets.length > 0) {
     cards = sets[0].cards || {};
-
-    // latestPrices = cards.map(function (card) {
-    //   return card.latestPrice?.price ?? 0;
-    // });
   }
 
   //Set up data for color pie chart
@@ -36,33 +31,149 @@ export const getColorData = (data) => {
     {
       id: "Colorless",
       label: "Colorless",
-      value: colorCount["Colorless"],
+      value: colorCount["Colorless"] || 0,
     },
     {
       id: "White",
       label: "White",
-      value: colorCount["W"],
+      value: colorCount["W"] || 0,
     },
     {
       id: "Blue",
       label: "Blue",
-      value: colorCount["U"],
+      value: colorCount["U"] || 0,
     },
     {
       id: "Black",
       label: "Black",
-      value: colorCount["B"],
+      value: colorCount["B"] || 0,
     },
     {
       id: "Red",
       label: "Red",
-      value: colorCount["R"],
+      value: colorCount["R"] || 0,
     },
     {
       id: "Green",
       label: "Green",
-      value: colorCount["G"],
+      value: colorCount["G"] || 0,
     },
   ];
   return colorData;
+};
+
+export const getCardPriceData = (data) => {
+  //Refine data for later use
+  const { sets } = data || null;
+  let { cards } = {};
+  let latestPrices = {};
+  if (sets && sets.length > 0) {
+    cards = sets[0].cards || {};
+
+    latestPrices = cards.map(function (card) {
+      return card.latestPrice?.price ?? 0;
+    });
+  }
+  console.log(latestPrices);
+  let priceCount = latestPrices.reduce((priceAccumulator, latestPrice) => {
+    if (latestPrice >= 0.5) {
+      if (priceAccumulator["PGT.5"]) {
+        priceAccumulator["PGT.5"] += 1;
+      } else {
+        priceAccumulator["PGT.5"] = 1;
+      }
+    }
+    if (latestPrice >= 1) {
+      if (priceAccumulator["PGT1"]) {
+        priceAccumulator["PGT1"] += 1;
+      } else {
+        priceAccumulator["PGT1"] = 1;
+      }
+    }
+    if (latestPrice >= 3) {
+      if (priceAccumulator["PGT3"]) {
+        priceAccumulator["PGT3"] += 1;
+      } else {
+        priceAccumulator["PGT3"] = 1;
+      }
+    }
+    if (latestPrice >= 10) {
+      if (priceAccumulator["PGT10"]) {
+        priceAccumulator["PGT10"] += 1;
+      } else {
+        priceAccumulator["PGT10"] = 1;
+      }
+    }
+    if (latestPrice >= 30) {
+      if (priceAccumulator["PGT30"]) {
+        priceAccumulator["PGT30"] += 1;
+      } else {
+        priceAccumulator["PGT30"] = 1;
+      }
+    }
+    if (latestPrice >= 50) {
+      if (priceAccumulator["PGT50"]) {
+        priceAccumulator["PGT50"] += 1;
+      } else {
+        priceAccumulator["PGT50"] = 1;
+      }
+    }
+    if (latestPrice >= 100) {
+      if (priceAccumulator["PGT100"]) {
+        priceAccumulator["PGT100"] += 1;
+      } else {
+        priceAccumulator["PGT100"] = 1;
+      }
+    }
+    return priceAccumulator;
+  }, {});
+
+  const priceData = [
+    {
+      id: "SetColorData",
+      data: [
+        {
+          x: "Over .50$",
+          y: priceCount["PGT.5"] || 0,
+        },
+        {
+          x: "Over 1.00$",
+          y: priceCount["PGT1"] || 0,
+        },
+        {
+          x: "Over 3.00$",
+          y: priceCount["PGT3"] || 0,
+        },
+        {
+          x: "Over 10.00$",
+          y: priceCount["PGT10"] || 0,
+        },
+        {
+          x: "Over 30.00$",
+          y: priceCount["PGT30"] || 0,
+        },
+        {
+          x: "Over 50.00$",
+          y: priceCount["PGT50"] || 0,
+        },
+        {
+          x: "Over 100.00$",
+          y: priceCount["PGT100"] || 0,
+        },
+      ],
+    },
+  ];
+
+  return priceData;
+};
+
+export const getRarityData = (data) => {
+  //Refine data for later use
+  const { sets } = data || null;
+  let { cards } = {};
+  if (sets && sets.length > 0) {
+    cards = sets[0].cards || {};
+  }
+
+  return cards;
 };

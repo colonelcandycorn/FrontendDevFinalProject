@@ -4,8 +4,10 @@ import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useQuery } from "@apollo/client";
 import { GET_SETS_BY_CODE } from "../../assets/queries.jsx";
+import { ResponsiveLine } from "@nivo/line";
 import { ResponsivePie } from "@nivo/pie";
-import { getColorData } from "./SetsFunctions.jsx";
+// import { ResponsiveBar } from "@nivo/bar";
+import { getColorData, getCardPriceData, getRarityData } from "./SetsFunctions.jsx";
 
 export const SetsPage = ({ setInfo, loadingSets: isLoading, errorSets: loadError }) => {
   const [selectedSet, setSelectedSet] = useState("");
@@ -42,8 +44,12 @@ export const SetsPage = ({ setInfo, loadingSets: isLoading, errorSets: loadError
 
   //Fetch data from functions
   const colorData = getColorData(data);
+  const priceData = getCardPriceData(data);
+  const rarityData = getRarityData(data);
 
-  //Page return
+  console.log(rarityData);
+
+  //Page Setup
   return (
     <>
       <MainNavigation />
@@ -92,7 +98,22 @@ export const SetsPage = ({ setInfo, loadingSets: isLoading, errorSets: loadError
           <Row>
             <div>
               <div style={{ display: "grid" }}>
-                {/* <div style={{ height: 400 }}><ResponsiveLine data={data1} /></div> */}
+                <h2> Price Distribution For Set </h2>
+                <div style={{ height: 400 }}>
+                  <ResponsiveLine
+                    data={priceData}
+                    colors="#0000FF"
+                    margin={{ top: 20, right: 110, bottom: 50, left: 60 }}
+                    xScale={{ type: "point" }}
+                    yScale={{
+                      type: "linear",
+                      min: "auto",
+                      max: "auto",
+                      stacked: true,
+                      reverse: false,
+                    }}
+                  />
+                </div>
                 <div style={{ height: 500 }}>
                   <h2> Color Pie For Set </h2>
                   <ResponsivePie
