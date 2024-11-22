@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { useQuery } from "@apollo/client";
 import { GET_SETS, GET_SETS_BY_CODE } from "../../assets/queries.jsx";
 import { ResponsiveLine } from "@nivo/line";
+import { ResponsivePie } from "@nivo/pie";
 
 export const SetsPage = ({ setInfo, loadingSets: isLoading, errorSets: loadError }) => {
   const [selectedSet, setSelectedSet] = useState("");
@@ -33,11 +34,11 @@ export const SetsPage = ({ setInfo, loadingSets: isLoading, errorSets: loadError
     }
   };
 
-  const { loading, data } = useQuery(GET_SETS);
+  const { loading, data } = useQuery(GET_SETS_BY_CODE(selectedSet));
   if (loading) {
     return "Loading...";
   }
-  const { sets } = data;
+  const { sets } = data || null;
   let { cards } = {};
   let latestPrices = {};
   if (sets && sets.length > 0) {
@@ -48,20 +49,59 @@ export const SetsPage = ({ setInfo, loadingSets: isLoading, errorSets: loadError
     });
   }
 
-  // let totalSetPrice = latestPrices.reduce((accumulator, current) => accumulator + current, 0);
+  let colorCount = cards.reduce((colorAccumulator, card) => {
+    if (card.colors.length === 0) {
+      if (colorAccumulator["Colorless"]) {
+        colorAccumulator["Colorless"] += 1;
+      } else {
+        colorAccumulator["Colorless"] = 1;
+      }
+    } else {
+      card.colors.forEach((color) => {
+        if (colorAccumulator[color]) {
+          colorAccumulator[color] += 1;
+        } else {
+          colorAccumulator[color] = 1;
+        }
+      });
+    }
+    return colorAccumulator;
+  }, {});
 
-  console.log(latestPrices);
+  console.log(colorCount);
 
-  // const data1 = [
-  //   {
-  //     id: "series1",
-  //     data: [
-  //       { x: "A", y: 10 },
-  //       { x: "B", y: 20 },
-  //       { x: "C", y: 15 },
-  //     ],
-  //   },
-  // ];
+  const colorData = [
+    {
+      id: "Colorless",
+      label: "Colorless",
+      value: colorCount["Colorless"],
+    },
+    {
+      id: "White",
+      label: "White",
+      value: colorCount["W"],
+    },
+    {
+      id: "Blue",
+      label: "Blue",
+      value: colorCount["U"],
+    },
+    {
+      id: "Black",
+      label: "Black",
+      value: colorCount["B"],
+    },
+    {
+      id: "Red",
+      label: "Red",
+      value: colorCount["R"],
+    },
+    {
+      id: "Green",
+      label: "Green",
+      value: colorCount["G"],
+    },
+  ];
 
   return (
     <>
@@ -110,9 +150,16 @@ export const SetsPage = ({ setInfo, loadingSets: isLoading, errorSets: loadError
         {selectedSet && (
           <Row>
             <div>
-              <h2> Some Test Text </h2>
               <div style={{ display: "grid" }}>
-                <div style={{ height: 400 }}>{/* <ResponsiveLine data={data1} /> */}</div>
+                {/* <div style={{ height: 400 }}><ResponsiveLine data={data1} /></div> */}
+                <div style={{ height: 500 }}>
+                  <h2> Color Pie For Set </h2>
+                  <ResponsivePie
+                    data={colorData}
+                    margin={{ top: 40, right: 80, bottom: 80, left: 80 }}
+                    colors={["#C0C0C0", "#F8F8FF", "#008cff", "#000000", "#ff0000", "#30cc00"]}
+                  />
+                </div>
               </div>
             </div>
           </Row>

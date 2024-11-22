@@ -24,6 +24,7 @@ export const GET_SETS_BY_CODE = (setCode) => {
           name
           cards {
             name
+            colors
             setCode
             type
             text
