@@ -14,6 +14,12 @@ export const getColorData = (data) => {
       } else {
         colorAccumulator["Colorless"] = 1;
       }
+    } else if (card.colors.length > 1) {
+      if (colorAccumulator["Multicolored"]) {
+        colorAccumulator["Multicolored"] += 1;
+      } else {
+        colorAccumulator["Multicolored"] = 1;
+      }
     } else {
       card.colors.forEach((color) => {
         if (colorAccumulator[color]) {
@@ -32,6 +38,11 @@ export const getColorData = (data) => {
       id: "Colorless",
       label: "Colorless",
       value: colorCount["Colorless"] || 0,
+    },
+    {
+      id: "Multicolored",
+      label: "Multicolored",
+      value: colorCount["Multicolored"] || 0,
     },
     {
       id: "White",
@@ -75,7 +86,7 @@ export const getCardPriceData = (data) => {
     });
   }
 
-  //Set up data for price distribution
+  //Set up data for price distribution (PGT = Price Greater Than)
   let priceCount = latestPrices.reduce((priceAccumulator, latestPrice) => {
     if (latestPrice >= 0.5) {
       if (priceAccumulator["PGT.5"]) {
@@ -207,8 +218,6 @@ export const getRarityData = (data) => {
     return rarityAccumulator;
   }, {});
 
-  console.log(rarityCount);
-
   const rarityData = [
     {
       rarity: "Mythic",
@@ -229,4 +238,168 @@ export const getRarityData = (data) => {
   ];
 
   return rarityData;
+};
+
+export const getCardTypesData = (data) => {
+  //Refine data for later use
+  const { sets } = data || null;
+  let { cards } = {};
+  if (sets && sets.length > 0) {
+    cards = sets[0].cards || {};
+  }
+
+  //Set up data for rarity bar chart
+  let typeCount = cards.reduce((typeAccumulator, card) => {
+    if (card.type.includes("Artifact")) {
+      if (typeAccumulator["Artifact"]) {
+        typeAccumulator["Artifact"] += 1;
+      } else {
+        typeAccumulator["Artifact"] = 1;
+      }
+    }
+    if (card.type.includes("Battle")) {
+      if (typeAccumulator["Battle"]) {
+        typeAccumulator["Battle"] += 1;
+      } else {
+        typeAccumulator["Battle"] = 1;
+      }
+    }
+    if (card.type.includes("Conspiracy")) {
+      if (typeAccumulator["Conspiracy"]) {
+        typeAccumulator["Conspiracy"] += 1;
+      } else {
+        typeAccumulator["Conspiracy"] = 1;
+      }
+    }
+    if (card.type.includes("Creature")) {
+      if (typeAccumulator["Creature"]) {
+        typeAccumulator["Creature"] += 1;
+      } else {
+        typeAccumulator["Creature"] = 1;
+      }
+    }
+    if (card.type.includes("Dungeon")) {
+      if (typeAccumulator["Dungeon"]) {
+        typeAccumulator["Dungeon"] += 1;
+      } else {
+        typeAccumulator["Dungeon"] = 1;
+      }
+    }
+    if (card.type.includes("Enchantment")) {
+      if (typeAccumulator["Enchantment"]) {
+        typeAccumulator["Enchantment"] += 1;
+      } else {
+        typeAccumulator["Enchantment"] = 1;
+      }
+    }
+    if (card.type.includes("Instant")) {
+      if (typeAccumulator["Instant"]) {
+        typeAccumulator["Instant"] += 1;
+      } else {
+        typeAccumulator["Instant"] = 1;
+      }
+    }
+    if (card.type.includes("Kindred")) {
+      if (typeAccumulator["Kindred"]) {
+        typeAccumulator["Kindred"] += 1;
+      } else {
+        typeAccumulator["Kindred"] = 1;
+      }
+    }
+    if (card.type.includes("Land")) {
+      if (typeAccumulator["Land"]) {
+        typeAccumulator["Land"] += 1;
+      } else {
+        typeAccumulator["Land"] = 1;
+      }
+    }
+    if (card.type.includes("Planeswalker")) {
+      if (typeAccumulator["Planeswalker"]) {
+        typeAccumulator["Planeswalker"] += 1;
+      } else {
+        typeAccumulator["Planeswalker"] = 1;
+      }
+    }
+    if (card.type.includes("Scheme")) {
+      if (typeAccumulator["Scheme"]) {
+        typeAccumulator["Scheme"] += 1;
+      } else {
+        typeAccumulator["Scheme"] = 1;
+      }
+    }
+    if (card.type.includes("Sorcery")) {
+      if (typeAccumulator["Sorcery"]) {
+        typeAccumulator["Sorcery"] += 1;
+      } else {
+        typeAccumulator["Sorcery"] = 1;
+      }
+    }
+    return typeAccumulator;
+  }, {});
+
+  // Data object for color chart
+  const typeData = [
+    {
+      id: "Artifact",
+      label: "Artifact",
+      value: typeCount["Artifact"] || 0,
+    },
+    {
+      id: "Battle",
+      label: "Battle",
+      value: typeCount["Battle"] || 0,
+    },
+    {
+      id: "Conspiracy",
+      label: "Conspiracy",
+      value: typeCount["Conspiracy"] || 0,
+    },
+    {
+      id: "Creature",
+      label: "Creature",
+      value: typeCount["Creature"] || 0,
+    },
+    {
+      id: "Dungeon",
+      label: "Dungeon",
+      value: typeCount["Dungeon"] || 0,
+    },
+    {
+      id: "Enchantment",
+      label: "Enchantment",
+      value: typeCount["Enchantment"] || 0,
+    },
+    {
+      id: "Instant",
+      label: "Instant",
+      value: typeCount["Instant"] || 0,
+    },
+    {
+      id: "Kindred",
+      label: "Kindred",
+      value: typeCount["Kindred"] || 0,
+    },
+    {
+      id: "Land",
+      label: "Land",
+      value: typeCount["Land"] || 0,
+    },
+    {
+      id: "Planeswalker",
+      label: "Planeswalker",
+      value: typeCount["Planeswalker"] || 0,
+    },
+    {
+      id: "Scheme",
+      label: "Scheme",
+      value: typeCount["Scheme"] || 0,
+    },
+    {
+      id: "Sorcery",
+      label: "Sorcery",
+      value: typeCount["Sorcery"] || 0,
+    },
+  ];
+
+  return typeData;
 };

@@ -7,7 +7,12 @@ import { GET_SETS_BY_CODE } from "../../assets/queries.jsx";
 import { ResponsiveLine } from "@nivo/line";
 import { ResponsivePie } from "@nivo/pie";
 import { ResponsiveBar } from "@nivo/bar";
-import { getColorData, getCardPriceData, getRarityData } from "./SetsFunctions.jsx";
+import {
+  getColorData,
+  getCardPriceData,
+  getRarityData,
+  getCardTypesData,
+} from "./SetsFunctions.jsx";
 
 export const SetsPage = ({ setInfo, loadingSets: isLoading, errorSets: loadError }) => {
   const [selectedSet, setSelectedSet] = useState("");
@@ -46,8 +51,7 @@ export const SetsPage = ({ setInfo, loadingSets: isLoading, errorSets: loadError
   const colorData = getColorData(data);
   const priceData = getCardPriceData(data);
   const rarityData = getRarityData(data);
-
-  console.log(rarityData);
+  const typesData = getCardTypesData(data);
 
   //Page Setup
   return (
@@ -115,11 +119,32 @@ export const SetsPage = ({ setInfo, loadingSets: isLoading, errorSets: loadError
                   />
                 </div>
                 <div style={{ height: 500 }}>
-                  <h2> Color Pie For Set </h2>
+                  <h2> Color Pie Chart For Set </h2>
                   <ResponsivePie
                     data={colorData}
                     margin={{ top: 40, right: 80, bottom: 80, left: 80 }}
-                    colors={["#C0C0C0", "#F8F8FF", "#008cff", "#000000", "#ff0000", "#30cc00"]}
+                    colors={[
+                      "#C0C0C0",
+                      "#efbf04",
+                      "#F8F8FF",
+                      "#008cff",
+                      "#000000",
+                      "#ff0000",
+                      "#30cc00",
+                    ]}
+                    cornerRadius={3}
+                    activeOuterRadiusOffset={8}
+                    borderWidth={1}
+                  />
+                </div>
+                <div style={{ height: 500 }}>
+                  <h2> Type Pie Chart For Set </h2>
+                  <ResponsivePie
+                    data={typesData}
+                    margin={{ top: 40, right: 80, bottom: 80, left: 80 }}
+                    colors={{ scheme: "tableau10" }}
+                    arcLinkLabelsSkipAngle={1}
+                    arcLabelsSkipAngle={1}
                     cornerRadius={3}
                     activeOuterRadiusOffset={8}
                     borderWidth={1}
@@ -131,7 +156,7 @@ export const SetsPage = ({ setInfo, loadingSets: isLoading, errorSets: loadError
                     data={rarityData}
                     keys={["count"]}
                     indexBy="rarity"
-                    colors={["#FF4433", "#D4AF37", "silver", "black"]}
+                    colors={["#FF4433", "#D4AF37", "#C0C0C0", "#000000"]}
                     labelTextColor="white"
                     colorBy="index"
                     margin={{ top: 40, right: 80, bottom: 80, left: 80 }}
