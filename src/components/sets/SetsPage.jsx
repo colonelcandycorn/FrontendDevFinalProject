@@ -132,6 +132,8 @@ export const SetsPage = ({ setInfo, loadingSets: isLoading, errorSets: loadError
                       "#ff0000",
                       "#30cc00",
                     ]}
+                    arcLinkLabelsSkipAngle={1}
+                    arcLabelsSkipAngle={1}
                     cornerRadius={3}
                     activeOuterRadiusOffset={8}
                     borderWidth={1}
