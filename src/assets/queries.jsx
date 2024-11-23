@@ -26,6 +26,7 @@ export const GET_SETS_BY_CODE = (setCode) => {
             name
             colors
             setCode
+            rarity
             type
             text
             latestPrice(listType: RETAIL, provider: "tcgplayer", cardType: "normal") {

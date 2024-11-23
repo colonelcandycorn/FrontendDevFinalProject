@@ -74,7 +74,8 @@ export const getCardPriceData = (data) => {
       return card.latestPrice?.price ?? 0;
     });
   }
-  console.log(latestPrices);
+
+  //Set up data for price distribution
   let priceCount = latestPrices.reduce((priceAccumulator, latestPrice) => {
     if (latestPrice >= 0.5) {
       if (priceAccumulator["PGT.5"]) {
@@ -128,6 +129,7 @@ export const getCardPriceData = (data) => {
     return priceAccumulator;
   }, {});
 
+  // Create data object for price distribution
   const priceData = [
     {
       id: "SetColorData",
@@ -175,5 +177,56 @@ export const getRarityData = (data) => {
     cards = sets[0].cards || {};
   }
 
-  return cards;
+  //Set up data for rarity bar chart
+  let rarityCount = cards.reduce((rarityAccumulator, card) => {
+    if (card.rarity === "mythic") {
+      if (rarityAccumulator["Mythic"]) {
+        rarityAccumulator["Mythic"] += 1;
+      } else {
+        rarityAccumulator["Mythic"] = 1;
+      }
+    } else if (card.rarity === "rare") {
+      if (rarityAccumulator["Rare"]) {
+        rarityAccumulator["Rare"] += 1;
+      } else {
+        rarityAccumulator["Rare"] = 1;
+      }
+    } else if (card.rarity === "uncommon") {
+      if (rarityAccumulator["Uncommon"]) {
+        rarityAccumulator["Uncommon"] += 1;
+      } else {
+        rarityAccumulator["Uncommon"] = 1;
+      }
+    } else if (card.rarity === "common") {
+      if (rarityAccumulator["Common"]) {
+        rarityAccumulator["Common"] += 1;
+      } else {
+        rarityAccumulator["Common"] = 1;
+      }
+    }
+    return rarityAccumulator;
+  }, {});
+
+  console.log(rarityCount);
+
+  const rarityData = [
+    {
+      rarity: "Mythic",
+      count: rarityCount["Mythic"] || 0,
+    },
+    {
+      rarity: "Rare",
+      count: rarityCount["Rare"] || 0,
+    },
+    {
+      rarity: "Uncommon",
+      count: rarityCount["Uncommon"] || 0,
+    },
+    {
+      rarity: "Common",
+      count: rarityCount["Common"] || 0,
+    },
+  ];
+
+  return rarityData;
 };

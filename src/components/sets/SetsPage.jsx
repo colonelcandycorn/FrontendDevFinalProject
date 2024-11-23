@@ -6,7 +6,7 @@ import { useQuery } from "@apollo/client";
 import { GET_SETS_BY_CODE } from "../../assets/queries.jsx";
 import { ResponsiveLine } from "@nivo/line";
 import { ResponsivePie } from "@nivo/pie";
-// import { ResponsiveBar } from "@nivo/bar";
+import { ResponsiveBar } from "@nivo/bar";
 import { getColorData, getCardPriceData, getRarityData } from "./SetsFunctions.jsx";
 
 export const SetsPage = ({ setInfo, loadingSets: isLoading, errorSets: loadError }) => {
@@ -123,6 +123,18 @@ export const SetsPage = ({ setInfo, loadingSets: isLoading, errorSets: loadError
                     cornerRadius={3}
                     activeOuterRadiusOffset={8}
                     borderWidth={1}
+                  />
+                </div>
+                <div style={{ height: 500 }}>
+                  <h2> Rarity Distribution for Set </h2>
+                  <ResponsiveBar
+                    data={rarityData}
+                    keys={["count"]}
+                    indexBy="rarity"
+                    colors={["#FF4433", "#D4AF37", "silver", "black"]}
+                    labelTextColor="white"
+                    colorBy="index"
+                    margin={{ top: 40, right: 80, bottom: 80, left: 80 }}
                   />
                 </div>
               </div>
