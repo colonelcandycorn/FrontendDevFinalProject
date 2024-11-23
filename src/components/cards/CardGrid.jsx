@@ -10,50 +10,58 @@ export const CardGrid = ({ currentCards }) => {
   const [cardWithURIs, setCardWithURIs] = useState([]);
   const navigate = useNavigate();
 
+  const requestImages = async (cardId) => {
+    try {
+      const response = await fetch(`https://api.scryfall.com/cards/${cardId}`);
+      const cardData = await response.json();
+      const { image_uris } = await cardData;
+      const uri =
+        (await image_uris?.normal) ??
+        image_uris?.large ??
+        image_uris?.small ??
+        image_uris?.border_crop ??
+        image_uris?.art_crop ??
+        "https://placehold.co/326x453";
+      return uri;
+    } catch (e) {
+      setError(e);
+    }
+  };
+
   useEffect(() => {
+    let isMounted = true; // Prevent state updates if the component unmounts
     setLoading(true);
-    const requestImages = async (cardId) => {
-      try {
-        const response = await fetch(
-          `https://api.scryfall.com/cards/${cardId}`,
-        );
-        const cardData = await response.json();
-        const { image_uris } = await cardData;
-        const uri =
-          (await image_uris?.normal) ??
-          image_uris?.large ??
-          image_uris?.small ??
-          image_uris?.border_crop ??
-          image_uris?.art_crop ??
-          "https://placehold.co/326x453";
-        return uri;
-      } catch (e) {
-        setError(e);
-      }
-    };
+
     const limiter = new RateLimiter({ tokensPerInterval: 1, interval: 50 });
 
-    const cardURIs = currentCards.map(
-      async ({ name, setCode, scryfallId, price, foilPrice }) => {
-        const remainingMessages = await limiter.removeTokens(1);
-        const uri = await requestImages(scryfallId);
-        return { name, setCode, scryfallId, price, foilPrice, uri };
-      },
-    );
+    const fetchCardData = async () => {
+      try {
+        const cardURIs = currentCards.map(async ({ scryfallId, ...rest }) => {
+          await limiter.removeTokens(1); // Ensure rate-limiting delay
+          const uri = await requestImages(scryfallId);
+          return { ...rest, scryfallId, uri };
+        });
 
-    Promise.all(cardURIs)
-      .then(chunkCards)
-      .then(setCardWithURIs)
-      .finally(() => setLoading(false))
-      .catch(setError);
-    // delay 50 * number of cards to show loading spinner
+        const resolvedCards = await Promise.all(cardURIs);
+
+        if (isMounted) {
+          setCardWithURIs(chunkCards(resolvedCards));
+          setLoading(false);
+        }
+      } catch (e) {
+        if (isMounted) {
+          setError(e);
+          setLoading(false);
+        }
+      }
+    };
+
+    fetchCardData();
+
+    return () => {
+      isMounted = false; // Clean up on component unmount
+    };
   }, [currentCards]);
-
-  if (error) {
-    navigate("/error", {
-      state: { errorMessages: "from card grid " + error.message },
-    });
-  }
 
   const chunkCards = (cards, chunkSize = 12) => {
     const chunkedArray = [];
