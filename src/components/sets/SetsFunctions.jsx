@@ -37,6 +37,7 @@ export const getColorData = (data) => {
     {
       id: "Colorless",
       label: "Colorless",
+      //Always have a fail state for when a count does not exist
       value: colorCount["Colorless"] || 0,
     },
     {
