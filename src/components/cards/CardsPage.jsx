@@ -1,19 +1,78 @@
 import { MainNavigation } from "../utils/MainNavigation.jsx";
 import { Col, Container, Row, Spinner, Form } from "react-bootstrap";
-import { Navigate, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
+import { useQuery } from "@apollo/client";
+import { getCardsInSet } from "../utils/queries.js";
+import { CardPagination } from "./CardPagination.jsx";
+import { SortDropdown } from "./SortDropdown.jsx";
 
-export const CardsPage = ({
-  setInfo,
-  loadingSets: isLoading,
-  errorSets: error,
-}) => {
+export const CardsPage = ({ setInfo, loadingSets: isLoading, errorSets }) => {
   const [selectedSet, setSelectedSet] = useState("");
+  const [apolloSetData, setApolloSetData] = useState([]);
   const [iconUri, setIconUri] = useState("");
+  const [sortFunction, setSortFunction] = useState(
+    () => (a, b) => b.price - a.price,
+  );
   const navigate = useNavigate();
-  if (error) {
-    navigate("/error", { state: { errorMessages: error.message } });
+  if (errorSets) {
+    navigate("/error", {
+      state: { errorMessages: "from errorSets" + errorSets.message },
+    });
   }
+
+  const { loading, error, data } = useQuery(getCardsInSet(selectedSet), {
+    skip: !selectedSet,
+    OnError: () => {
+      navigate("/error", {
+        state: { errorMessages: "from useQuery" + error.message },
+      });
+    },
+    onCompleted: (data) => {
+      // transform the data to a more usable format
+      const { sets } = data;
+      if (sets && sets.length > 0) {
+        const { cards } = sets[0];
+        const transformedData = cards
+          .map(
+            ({
+              name,
+              setCode,
+              identifiers: { scryfallId },
+              normalPrice,
+              foilPrice,
+            }) => {
+              const price = normalPrice?.price ?? 0; // Safe navigation and nullish coalescing
+              foilPrice = foilPrice?.price ?? 0;
+              return {
+                name,
+                setCode,
+                scryfallId,
+                price,
+                foilPrice,
+              };
+            },
+          )
+          .reduce((collect, curr) => {
+            if (
+              !collect.some((element) => element.scryfallId === curr.scryfallId)
+            ) {
+              collect.push(curr);
+            }
+
+            return collect;
+          }, []);
+        transformedData.sort(sortFunction);
+        setApolloSetData([...transformedData]);
+      }
+    },
+  });
+
+  useEffect(() => {
+    const newApolloSetData = [...apolloSetData];
+    newApolloSetData.sort(sortFunction);
+    setApolloSetData(newApolloSetData);
+  }, [sortFunction]);
 
   useEffect(() => {
     if (setInfo.length > 0) {
@@ -47,12 +106,12 @@ export const CardsPage = ({
         {isLoading && (
           <div className="d-flex justify-content-center align-items-center">
             <Spinner animation="border" role="status">
-              <span className="visually-hidden">Loading Country Data...</span>
+              <span className="visually-hidden">Loading Card Data...</span>
             </Spinner>
           </div>
         )}
         {!isLoading && (
-          <Row>
+          <Row className={"mb-2 justify-content-between"}>
             <Col md={2}>
               <Form.Select value={selectedSet} onChange={handleSelectChange}>
                 {setInfo.map(({ code, name }) => (
@@ -62,21 +121,29 @@ export const CardsPage = ({
                 ))}
               </Form.Select>
             </Col>
+            {selectedSet && (
+              <Col>
+                {iconUri && (
+                  <img
+                    src={iconUri}
+                    alt="Selected Set Icon"
+                    style={{ width: "36px", height: "36px" }}
+                  />
+                )}
+              </Col>
+            )}
+            <SortDropdown setSortOrder={setSortFunction} />
           </Row>
         )}
-        {selectedSet && (
-          <Row>
-            <Col>
-              {iconUri && (
-                <img
-                  src={iconUri}
-                  alt="Selected Set Icon"
-                  style={{ width: "100px", height: "100px" }}
-                />
-              )}
-              <p>Selected Set Code: {selectedSet}</p>
-            </Col>
-          </Row>
+        {loading && (
+          <div className="d-flex justify-content-center align-items-center">
+            <Spinner animation="border" role="status">
+              <span className="visually-hidden">Loading Card Data...</span>
+            </Spinner>
+          </div>
+        )}
+        {!loading && apolloSetData.length > 0 && (
+          <CardPagination cardArray={apolloSetData} />
         )}
       </Container>
     </>
