@@ -1,6 +1,6 @@
 import { MainNavigation } from "../utils/MainNavigation.jsx";
 import { Col, Container, Row, Spinner, Form } from "react-bootstrap";
-import { Navigate, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useQuery } from "@apollo/client";
 import { getCardsInSet } from "../utils/queries.js";

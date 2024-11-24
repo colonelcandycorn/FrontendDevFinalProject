@@ -1,4 +1,4 @@
-import { Col, Container, Row, Spinner } from "react-bootstrap";
+import { Container, Row } from "react-bootstrap";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { CardCard } from "./CardCard.jsx";

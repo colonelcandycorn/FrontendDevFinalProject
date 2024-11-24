@@ -1,5 +1,5 @@
 import { Breadcrumb, Card, Col, Container, Row } from "react-bootstrap";
-import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { MainNavigation } from "../utils/MainNavigation.jsx";
 import { useQuery } from "@apollo/client";
 import { getCardPrices } from "../utils/queries.js";
