@@ -36,3 +36,26 @@ export const getCardsInSet = (setCode) => {
       }
   `;
 };
+
+export const getCardPrices = (name, setCode) => {
+  return gql`
+        query {
+            cards(
+                filter: { name_like: "${name}", setCode_eq: "${setCode}" }
+                page: { take: 1, skip: 0 }
+                order: { order: ASC }
+            ) {
+                name
+                setCode
+                text
+                prices {
+                    provider
+                    date
+                    cardType
+                    listType
+                    price
+                }
+            }
+        }
+    `;
+};
