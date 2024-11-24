@@ -1,6 +1,6 @@
 import { MainNavigation } from "../utils/MainNavigation.jsx";
 import { Col, Container, Row, Spinner, Form } from "react-bootstrap";
-import { Navigate, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useQuery } from "@apollo/client";
 import { getCardsInSet } from "../utils/queries.js";
@@ -106,7 +106,7 @@ export const CardsPage = ({ setInfo, loadingSets: isLoading, errorSets }) => {
         {isLoading && (
           <div className="d-flex justify-content-center align-items-center">
             <Spinner animation="border" role="status">
-              <span className="visually-hidden">Loading Country Data...</span>
+              <span className="visually-hidden">Loading Card Data...</span>
             </Spinner>
           </div>
         )}
