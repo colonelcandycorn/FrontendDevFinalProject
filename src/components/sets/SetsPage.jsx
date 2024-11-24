@@ -103,7 +103,7 @@ export const SetsPage = ({ setInfo, loadingSets: isLoading, errorSets: loadError
             <div>
               <div style={{ display: "grid" }}>
                 <h2> Price Distribution For Set </h2>
-                <div style={{ height: 400 }}>
+                <div style={{ height: 400, minWidth: 0 }}>
                   <ResponsiveLine
                     data={priceData}
                     colors="#0000FF"
@@ -118,7 +118,7 @@ export const SetsPage = ({ setInfo, loadingSets: isLoading, errorSets: loadError
                     }}
                   />
                 </div>
-                <div style={{ height: 500 }}>
+                <div style={{ height: 500, minWidth: 0 }}>
                   <h2> Color Pie Chart For Set </h2>
                   <ResponsivePie
                     data={colorData}
@@ -139,7 +139,7 @@ export const SetsPage = ({ setInfo, loadingSets: isLoading, errorSets: loadError
                     borderWidth={1}
                   />
                 </div>
-                <div style={{ height: 500 }}>
+                <div style={{ height: 500, minWidth: 0 }}>
                   <h2> Type Pie Chart For Set </h2>
                   <ResponsivePie
                     data={typesData}
@@ -152,7 +152,7 @@ export const SetsPage = ({ setInfo, loadingSets: isLoading, errorSets: loadError
                     borderWidth={1}
                   />
                 </div>
-                <div style={{ height: 500 }}>
+                <div style={{ height: 500, minWidth: 0 }}>
                   <h2> Rarity Distribution for Set </h2>
                   <ResponsiveBar
                     data={rarityData}
