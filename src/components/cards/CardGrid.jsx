@@ -1,6 +1,5 @@
 import { Container, Row } from "react-bootstrap";
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { CardCard } from "./CardCard.jsx";
 import { RateLimiter } from "limiter";
 
@@ -8,7 +7,6 @@ export const CardGrid = ({ currentCards }) => {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
   const [cardWithURIs, setCardWithURIs] = useState([]);
-  const navigate = useNavigate();
 
   const requestImages = async (cardId) => {
     try {

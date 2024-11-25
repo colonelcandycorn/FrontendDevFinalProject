@@ -106,7 +106,7 @@ export const CardsPage = ({ setInfo, loadingSets: isLoading, errorSets }) => {
         {isLoading && (
           <div className="d-flex justify-content-center align-items-center">
             <Spinner animation="border" role="status">
-              <span className="visually-hidden">Loading Country Data...</span>
+              <span className="visually-hidden">Loading Card Data...</span>
             </Spinner>
           </div>
         )}
