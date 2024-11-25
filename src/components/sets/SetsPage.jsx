@@ -101,11 +101,11 @@ export const SetsPage = ({ setInfo, loadingSets: isLoading, errorSets: loadError
           <Row>
             <Col lg={6} className={"m-0"}>
               <h2> Price Distribution For Set </h2>
-              <div style={{ height: 400, minWidth: 0 }}>
+              <div style={{ height: 500, minWidth: 0 }}>
                 <ResponsiveLine
                   data={priceData}
                   colors="#0000FF"
-                  margin={{ top: 20, right: 110, bottom: 50, left: 60 }}
+                  margin={{ top: 40, right: 80, bottom: 80, left: 80 }}
                   xScale={{ type: "point" }}
                   yScale={{
                     type: "linear",
@@ -114,6 +114,20 @@ export const SetsPage = ({ setInfo, loadingSets: isLoading, errorSets: loadError
                     stacked: true,
                     reverse: false,
                   }}
+                />
+              </div>
+            </Col>
+            <Col lg={6} className={"m-0"}>
+              <div style={{ height: 500, minWidth: 0 }}>
+                <h2> Rarity Distribution for Set </h2>
+                <ResponsiveBar
+                  data={rarityData}
+                  keys={["count"]}
+                  indexBy="rarity"
+                  colors={["#FF4433", "#D4AF37", "#C0C0C0", "#000000"]}
+                  labelTextColor="white"
+                  colorBy="index"
+                  margin={{ top: 40, right: 80, bottom: 80, left: 80 }}
                 />
               </div>
             </Col>
@@ -152,20 +166,6 @@ export const SetsPage = ({ setInfo, loadingSets: isLoading, errorSets: loadError
                   cornerRadius={3}
                   activeOuterRadiusOffset={8}
                   borderWidth={1}
-                />
-              </div>
-            </Col>
-            <Col lg={6} className={"m-0"}>
-              <div style={{ height: 500, minWidth: 0 }}>
-                <h2> Rarity Distribution for Set </h2>
-                <ResponsiveBar
-                  data={rarityData}
-                  keys={["count"]}
-                  indexBy="rarity"
-                  colors={["#FF4433", "#D4AF37", "#C0C0C0", "#000000"]}
-                  labelTextColor="white"
-                  colorBy="index"
-                  margin={{ top: 40, right: 80, bottom: 80, left: 80 }}
                 />
               </div>
             </Col>
