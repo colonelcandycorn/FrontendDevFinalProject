@@ -1,7 +1,14 @@
 import { Card, Col } from "react-bootstrap";
 import { Link } from "react-router-dom";
 
-export const CardCard = ({ name, scryfallId, uri, price, foilPrice }) => {
+export const CardCard = ({
+  name,
+  scryfallId,
+  setCode,
+  uri,
+  price,
+  foilPrice,
+}) => {
   return (
     <Col key={scryfallId} lg={3} md={4} sm={6} xs={12}>
       <Card className={"mb-5 shadow"} style={{ maxWidth: "327px" }}>
