@@ -11,9 +11,7 @@ export const CardsPage = ({ setInfo, loadingSets: isLoading, errorSets }) => {
   const [selectedSet, setSelectedSet] = useState("");
   const [apolloSetData, setApolloSetData] = useState([]);
   const [iconUri, setIconUri] = useState("");
-  const [sortFunction, setSortFunction] = useState(
-    () => (a, b) => b.price - a.price,
-  );
+  const [sortFunction, setSortFunction] = useState(() => (a, b) => b.price - a.price);
   const navigate = useNavigate();
   if (errorSets) {
     navigate("/error", {
@@ -34,29 +32,19 @@ export const CardsPage = ({ setInfo, loadingSets: isLoading, errorSets }) => {
       if (sets && sets.length > 0) {
         const { cards } = sets[0];
         const transformedData = cards
-          .map(
-            ({
+          .map(({ name, setCode, identifiers: { scryfallId }, normalPrice, foilPrice }) => {
+            const price = normalPrice?.price ?? 0; // Safe navigation and nullish coalescing
+            foilPrice = foilPrice?.price ?? 0;
+            return {
               name,
               setCode,
-              identifiers: { scryfallId },
-              normalPrice,
+              scryfallId,
+              price,
               foilPrice,
-            }) => {
-              const price = normalPrice?.price ?? 0; // Safe navigation and nullish coalescing
-              foilPrice = foilPrice?.price ?? 0;
-              return {
-                name,
-                setCode,
-                scryfallId,
-                price,
-                foilPrice,
-              };
-            },
-          )
+            };
+          })
           .reduce((collect, curr) => {
-            if (
-              !collect.some((element) => element.scryfallId === curr.scryfallId)
-            ) {
+            if (!collect.some((element) => element.scryfallId === curr.scryfallId)) {
               collect.push(curr);
             }
 
@@ -142,9 +130,7 @@ export const CardsPage = ({ setInfo, loadingSets: isLoading, errorSets }) => {
             </Spinner>
           </div>
         )}
-        {!loading && apolloSetData.length > 0 && (
-          <CardPagination cardArray={apolloSetData} />
-        )}
+        {!loading && apolloSetData.length > 0 && <CardPagination cardArray={apolloSetData} />}
       </Container>
     </>
   );
