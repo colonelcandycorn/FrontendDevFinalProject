@@ -12,7 +12,7 @@ import {
   getCardPriceData,
   getRarityData,
   getCardTypesData,
-} from "./SetsFunctions.jsx";
+} from "./SetsGraphFunctions.jsx";
 
 export const SetsPage = ({ setInfo, loadingSets: isLoading, errorSets: loadError }) => {
   const [selectedSet, setSelectedSet] = useState("");

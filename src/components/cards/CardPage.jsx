@@ -4,6 +4,8 @@ import { MainNavigation } from "../utils/MainNavigation.jsx";
 import { useQuery } from "@apollo/client";
 import { getCardPrices } from "../utils/queries.js";
 import { useState } from "react";
+import { getCardPriceData } from "./CardGraphFunctions.jsx";
+import { ResponsiveLine } from "@nivo/line";
 
 export const CardPage = () => {
   const { state } = useLocation();
@@ -13,6 +15,7 @@ export const CardPage = () => {
   const [tcgFoilPrices, setTcgFoilPrices] = useState([]);
   const [cardKingdomPrices, setCardKingdomPrices] = useState([]);
   const [cardKingdomFoilPrices, setCardKingdomFoilPrices] = useState([]);
+  const [cardPriceData, setCardPriceData] = useState([]);
 
   const { loading, error, data } = useQuery(getCardPrices(name, setCode), {
     skip: !name || !setCode,
@@ -26,36 +29,22 @@ export const CardPage = () => {
       if (cards && cards.length > 0) {
         const { prices } = cards[0];
         const tcgList = prices.filter(({ listType, provider, price, date }) => {
+          return listType === "retail" && provider === "tcgplayer" && price && date;
+        });
+        setTcgPrices(tcgList);
+        const cardKingdomList = prices.filter(({ listType, provider, price, date }) => {
+          return listType === "retail" && provider === "cardkingdom" && price && date;
+        });
+        setCardKingdomPrices(cardKingdomList);
+        const tcgFoilList = prices.filter(({ listType, provider, price, date, cardType }) => {
           return (
-            listType === "retail" && provider === "tcgplayer" && price && date
+            listType === "retail" &&
+            provider === "tcgplayer" &&
+            price &&
+            date &&
+            cardType === "foil"
           );
         });
-        console.log(tcgList);
-        setTcgPrices(tcgList);
-        const cardKingdomList = prices.filter(
-          ({ listType, provider, price, date }) => {
-            return (
-              listType === "retail" &&
-              provider === "cardkingdom" &&
-              price &&
-              date
-            );
-          },
-        );
-        console.log(cardKingdomList);
-        setCardKingdomPrices(cardKingdomList);
-        const tcgFoilList = prices.filter(
-          ({ listType, provider, price, date, cardType }) => {
-            return (
-              listType === "retail" &&
-              provider === "tcgplayer" &&
-              price &&
-              date &&
-              cardType === "foil"
-            );
-          },
-        );
-        console.log(tcgFoilList);
         setTcgFoilPrices(tcgFoilList);
         const cardKingdomFoilList = prices.filter(
           ({ listType, provider, price, date, cardType }) => {
@@ -66,10 +55,11 @@ export const CardPage = () => {
               date &&
               cardType === "foil"
             );
-          },
+          }
         );
-        console.log(cardKingdomFoilList);
         setCardKingdomFoilPrices(cardKingdomFoilList);
+
+        setCardPriceData(getCardPriceData(tcgList, cardKingdomList));
       }
     },
   });
@@ -85,11 +75,7 @@ export const CardPage = () => {
         </Row>
         <hr />
         <Breadcrumb>
-          <Breadcrumb.Item
-            linkAs={Link}
-            linkProps={{ to: "/cards" }}
-            active={false}
-          >
+          <Breadcrumb.Item linkAs={Link} linkProps={{ to: "/cards" }} active={false}>
             cards
           </Breadcrumb.Item>
           <Breadcrumb.Item active>{name}</Breadcrumb.Item>
@@ -110,7 +96,64 @@ export const CardPage = () => {
               </Card.Body>
             </Card>
           </Col>
-          <Col></Col>
+          <Col xs={8} className={"m-0"}>
+            <h2 className="text-center"> Card Prices Over Time </h2>
+            <div style={{ height: 500, minWidth: 0 }}>
+              <ResponsiveLine
+                data={cardPriceData}
+                colors={(cardPriceData) => cardPriceData.color}
+                margin={{ top: 40, right: 80, bottom: 80, left: 80 }}
+                xScale={{
+                  type: "time",
+                  format: "%Y-%m-%d",
+                  useUTC: false,
+                  precision: "day",
+                }}
+                yScale={{
+                  type: "linear",
+                  min: "auto",
+                  max: "auto",
+                  stacked: false,
+                  reverse: false,
+                }}
+                axisBottom={{
+                  format: "%b %d",
+                  tickSize: 5,
+                  tickPadding: 5,
+                  tickRotation: 45,
+                  legend: "Date",
+                  legendOffset: 50,
+                  legendPosition: "middle",
+                  truncateTickAt: 0,
+                }}
+                axisLeft={{
+                  tickSize: 5,
+                  tickPadding: 5,
+                  tickRotation: 0,
+                  legend: "Price (USD$)",
+                  legendOffset: -40,
+                  legendPosition: "middle",
+                  truncateTickAt: 0,
+                }}
+                legends={[
+                  {
+                    anchor: "bottom",
+                    direction: "row",
+                    translateX: 0,
+                    translateY: 80,
+                    itemsSpacing: 0,
+                    itemDirection: "left-to-right",
+                    itemWidth: 150,
+                    itemHeight: 20,
+                    itemOpacity: 0.75,
+                    symbolSize: 12,
+                    symbolShape: "circle",
+                    symbolBorderColor: "rgba(0, 0, 0, .5)",
+                  },
+                ]}
+              />
+            </div>
+          </Col>{" "}
         </Row>
       </Container>
     </>
