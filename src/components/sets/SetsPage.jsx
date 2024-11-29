@@ -14,9 +14,15 @@ import {
   getCardTypesData,
 } from "./SetsGraphFunctions.jsx";
 
-export const SetsPage = ({ setInfo, loadingSets: isLoading, errorSets: loadError }) => {
-  const [selectedSet, setSelectedSet] = useState("");
-  const [iconUri, setIconUri] = useState("");
+export const SetsPage = ({
+  selectedSet,
+  setSelectedSet,
+  iconUri,
+  setIconUri,
+  setInfo,
+  loadingSets: isLoading,
+  errorSets: loadError,
+}) => {
   const [colorData, setColorData] = useState([]);
   const [priceData, setPriceData] = useState([]);
   const [rarityData, setRarityData] = useState([]);
@@ -25,14 +31,6 @@ export const SetsPage = ({ setInfo, loadingSets: isLoading, errorSets: loadError
   if (loadError) {
     navigate("/error", { state: { errorMessages: loadError.message } });
   }
-
-  useEffect(() => {
-    if (setInfo.length > 0) {
-      const firstSet = setInfo[0];
-      setSelectedSet(firstSet.code); // Set the default selected set code
-      setIconUri(firstSet.icon_svg_uri); // Set the default icon URI
-    }
-  }, [setInfo]);
 
   const handleSelectChange = (e) => {
     const selectedCode = e.target.value;
