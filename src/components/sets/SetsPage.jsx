@@ -1,7 +1,7 @@
 import { MainNavigation } from "../utils/MainNavigation.jsx";
 import { Col, Container, Row, Spinner, Form } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useQuery } from "@apollo/client";
 import { GET_SETS_BY_CODE } from "../../assets/queries.jsx";
 import { ResponsiveLine } from "@nivo/line";
