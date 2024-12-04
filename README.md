@@ -1,7 +1,5 @@
 # MTG PI
 
-
-
 ## Libraries used:
 
 Vite: very easy way to set up a React project. The main obstacle was setting up Jest/MSW which did not cooperate very well with Vite. 
@@ -29,4 +27,19 @@ React-testing-library and Mock Service Worker: used in conjunction with Jest for
 - [MTGJSON](https://mtgjson.com/getting-started/) documentation
 - [Scryfall API](https://scryfall.com/docs/api)
 - [React Quickly](https://www.manning.com/books/react-quickly-second-edition?a_aid=mortenb&a_bid=1cebd874) (book used to learn about React)
+- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
+- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
 
+# React + Nivo
+
+We used the Nivo charting library for all of the graphs in this project. Specifically, for the line, pie, and bar graphs detailed below.
+
+- [@nivo/line](https://nivo.rocks/line/) for the line graphs
+- [@nivo/pie](https://nivo.rocks/pie/) for the pie graphs
+- [@nivo/bar](https://nivo.rocks/bar/) for the bar graphs
+
+# Apollo GraphQL
+
+To access the MTGJSON API we needed to use Apollo GraphQL. Most noteably, the 'useQuery' hook.
+
+- [@apollo/client](https://www.apollographql.com/docs/react/data/queries) This is the relevant documentation for the react implementation of Apollo useQuery

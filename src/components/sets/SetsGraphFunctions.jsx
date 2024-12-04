@@ -141,7 +141,7 @@ export const getCardPriceData = (data) => {
     return priceAccumulator;
   }, {});
 
-  // Create data object for price distribution
+  // Create data object for price distribution line chart
   const priceData = [
     {
       id: "SetColorData",

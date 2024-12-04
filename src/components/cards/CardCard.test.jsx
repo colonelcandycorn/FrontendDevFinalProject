@@ -1,6 +1,7 @@
 import { render, screen, fireEvent, logRoles } from "@testing-library/react";
 import { describe, expect, it, jest } from "@jest/globals";
 import { CardCard } from "./CardCard.jsx";
+import { MemoryRouter } from "react-router-dom";
 
 describe("CardCard", () => {
   const testCard = {
@@ -13,7 +14,7 @@ describe("CardCard", () => {
   };
 
   it("should render the CardCard component", () => {
-    render(<CardCard {...testCard} />);
+    render(<CardCard {...testCard} />, { wrapper: MemoryRouter });
 
     // should render the prices
     expect(screen.getByText(/Normal: \$1.23/i)).toBeInTheDocument();
@@ -39,7 +40,7 @@ describe("CardCard", () => {
 
   it("should render Not Available when price is 0", () => {
     const cardWithZeroPrice = { ...testCard, price: 0, foilPrice: 0 };
-    render(<CardCard {...cardWithZeroPrice} />);
+    render(<CardCard {...cardWithZeroPrice} />, { wrapper: MemoryRouter });
 
     expect(screen.getByText(/Normal: Not Available/i)).toBeInTheDocument();
     expect(screen.getByText(/Foil: Not Available/i)).toBeInTheDocument();
