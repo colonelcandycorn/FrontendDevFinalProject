@@ -7,9 +7,19 @@ import { useEffect, useState } from "react";
 import { ErrorPage } from "./components/utils/ErrorPage.jsx";
 // code, set_type, name, released_at, card_count
 export const App = () => {
-  const [setNames, setSetNames] = useState([]);
+  const [setInfo, setSetInfo] = useState([]);
   const [loadingSets, setLoadingSets] = useState(true);
   const [errorSets, setErrorSets] = useState(null);
+  const [selectedSet, setSelectedSet] = useState("");
+  const [iconUri, setIconUri] = useState("");
+
+  useEffect(() => {
+    if (setInfo.length > 0) {
+      const firstSet = setInfo[0];
+      setSelectedSet(firstSet.code); // Set the default selected set code
+      setIconUri(firstSet.icon_svg_uri); // Set the default icon URI
+    }
+  }, [setInfo]);
 
   useEffect(() => {
     const getSets = async () => {
@@ -30,7 +40,7 @@ export const App = () => {
             icon_svg_uri,
             set_type,
           }));
-        setSetNames(filteredSetCodesAndNames);
+        setSetInfo(filteredSetCodesAndNames);
       } catch (error) {
         setErrorSets(error);
       } finally {
@@ -47,12 +57,32 @@ export const App = () => {
         <Route index element={<Navigate to={"/cards"} />} />
         <Route
           path={"cards"}
-          element={<CardsPage setInfo={setNames} loadingSets={loadingSets} errorSets={errorSets} />}
+          element={
+            <CardsPage
+              selectedSet={selectedSet}
+              setSelectedSet={setSelectedSet}
+              iconUri={iconUri}
+              setIconUri={setIconUri}
+              setInfo={setInfo}
+              loadingSets={loadingSets}
+              errorSets={errorSets}
+            />
+          }
         />
         <Route path={"cards/:cardName"} element={<CardPage />} />
         <Route
           path={"sets"}
-          element={<SetsPage setInfo={setNames} loadingSets={loadingSets} errorSets={errorSets} />}
+          element={
+            <SetsPage
+              selectedSet={selectedSet}
+              setSelectedSet={setSelectedSet}
+              iconUri={iconUri}
+              setIconUri={setIconUri}
+              setInfo={setInfo}
+              loadingSets={loadingSets}
+              errorSets={errorSets}
+            />
+          }
         />
         <Route path={"error"} element={<ErrorPage />} />
         <Route path={"*"} element={<NoMatch />} />

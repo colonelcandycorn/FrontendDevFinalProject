@@ -7,10 +7,16 @@ import { getCardsInSet } from "../utils/queries.js";
 import { CardPagination } from "./CardPagination.jsx";
 import { SortDropdown } from "./SortDropdown.jsx";
 
-export const CardsPage = ({ setInfo, loadingSets: isLoading, errorSets }) => {
-  const [selectedSet, setSelectedSet] = useState("");
+export const CardsPage = ({
+  selectedSet,
+  setSelectedSet,
+  iconUri,
+  setIconUri,
+  setInfo,
+  loadingSets: isLoading,
+  errorSets,
+}) => {
   const [apolloSetData, setApolloSetData] = useState([]);
-  const [iconUri, setIconUri] = useState("");
   const [sortFunction, setSortFunction] = useState(() => (a, b) => b.price - a.price);
   const navigate = useNavigate();
   if (errorSets) {
@@ -61,14 +67,6 @@ export const CardsPage = ({ setInfo, loadingSets: isLoading, errorSets }) => {
     newApolloSetData.sort(sortFunction);
     setApolloSetData(newApolloSetData);
   }, [sortFunction]);
-
-  useEffect(() => {
-    if (setInfo.length > 0) {
-      const firstSet = setInfo[0];
-      setSelectedSet(firstSet.code); // Set the default selected set code
-      setIconUri(firstSet.icon_svg_uri); // Set the default icon URI
-    }
-  }, [setInfo]);
 
   const handleSelectChange = (e) => {
     const selectedCode = e.target.value;
