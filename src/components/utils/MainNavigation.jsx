@@ -6,7 +6,7 @@ export const MainNavigation = () => {
     <Navbar expand="sm" bg="dark" variant="dark" sticky={"top"}>
       <Container fluid>
         <Navbar.Brand as={Link} to="/cards" className={"fs-4"}>
-          MTG Info
+          MTG Price Info
         </Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
