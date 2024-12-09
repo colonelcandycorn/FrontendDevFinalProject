@@ -144,7 +144,7 @@ export const getCardPriceData = (data) => {
   // Create data object for price distribution line chart
   const priceData = [
     {
-      id: "SetColorData",
+      id: "SetPriceData",
       data: [
         {
           x: "Over .50$",

@@ -1,5 +1,3 @@
-import { each } from "chart.js/helpers";
-
 export const getCardPriceData = (tcgData, cardKingdomData) => {
   // filter the data into the cardPriceData object, separating the foil and normal prices
 
