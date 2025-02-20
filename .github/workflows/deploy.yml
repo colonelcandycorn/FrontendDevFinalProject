@@ -35,5 +35,11 @@ jobs:
       env:
         VITE_MTG_JSON_TOKEN: ${{ secrets.VITE_MTG_JSON_TOKEN }}
 
+    - name: Upload artifact
+      uses: actions/upload-pages-artifact@v3
+      with:
+          name: 'github-pages'
+          path: 'dist'
+
     - name: Deploy
       uses: actions/deploy-pages@v4
