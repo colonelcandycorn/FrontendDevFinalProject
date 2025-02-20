@@ -34,6 +34,7 @@ jobs:
         npm run build
       env:
         VITE_MTG_JSON_TOKEN: ${{ secrets.VITE_MTG_JSON_TOKEN }}
+        BASE_URL: "https://colonelcandycorn.github.io/FrontendDevFinalProject/"
 
     - name: Upload artifact
       uses: actions/upload-pages-artifact@v3
