@@ -35,7 +35,7 @@ const client = new ApolloClient({
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <ApolloProvider client={client}>
-      <BrowserRouter basename={base}>
+      <BrowserRouter basename={"/FrontendDevFinalProject/"}>
         <App />
       </BrowserRouter>
     </ApolloProvider>

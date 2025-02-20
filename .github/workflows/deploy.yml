@@ -44,5 +44,5 @@ jobs:
     - name: Deploy
       uses: actions/deploy-pages@v4
       env:
-        BASE_URL: "https://colonelcandycorn.github.io/FrontendDevFinalProject"
+        BASE_URL: "https://colonelcandycorn.github.io/FrontendDevFinalProject/"
         VITE_MTG_JSON_TOKEN: ${{ secrets.VITE_MTG_JSON_TOKEN }}

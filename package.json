@@ -10,7 +10,6 @@
     "preview": "vite preview",
     "test": "jest"
   },
-  "homepage": "https://colonelcandycorn.github.io/FrontendDevFinalProject",
   "dependencies": {
     "@apollo/client": "^3.11.8",
     "@jest/globals": "^29.7.0",
