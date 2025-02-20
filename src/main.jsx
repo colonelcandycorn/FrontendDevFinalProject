@@ -10,6 +10,7 @@ import {
 import { setContext } from "@apollo/client/link/context";
 import { BrowserRouter } from "react-router-dom";
 import "../src/assets/css/main.css";
+const base = import.meta.env.BASE_URL
 
 const token = import.meta.env.VITE_MTG_JSON_TOKEN;
 
@@ -34,7 +35,7 @@ const client = new ApolloClient({
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <ApolloProvider client={client}>
-      <BrowserRouter>
+      <BrowserRouter basename={base}>
         <App />
       </BrowserRouter>
     </ApolloProvider>
