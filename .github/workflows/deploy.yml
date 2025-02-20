@@ -33,6 +33,5 @@ jobs:
     - name: Deploy
       uses: actions/deploy-pages@v4
       with:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        BRANCH: gh-pages
+        BRANCH: main
         FOLDER: dist
